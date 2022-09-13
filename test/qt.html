@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .s {
+      transform: rotateZ(90);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canv"></canvas>
+  <script>
+    rection = {
+      left:0,
+      right:1,
+      up:2,
+      down:3
+    }
+    // 坦克类
+    class Tank {
+      constructor(x, y, w, h, s, pics, damage = 1, blood = 10) {
+        this.x = x
+        this.y = y
+        this.w = w // 宽
+        this.h = h // 高
+        this.s = s // 速度
+        this.img = new Image()
+        this.img.src = pics
+        this.imgCopy = this.img.cloneNode(true)
+        this.img.src = pics // 图片
+        this.damage = damage // 上海
+        this.alive = true // 是否或者
+        this.blood = blood // 血量
+      }
+
+      blit() {
+        ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
+
+      }
+    }
+    // 玩家坦克类
+    class UserTank extends Tank {
+      constructor(x, y, w, h, s, pics, damage = 2, blood = 10) {
+        super(x, y, w, h, s,pics, damage, blood);
+      }
+    }
+
+    // 观察者类
+    class Observer {
+      constructor() {
+        this.tanks = []
+        this.bullets = []
+      }
+    }
+  </script>
+  <script>
+    let canvs = document.getElementById('canv');
+    /** @type {CanvasRenderingContext2D} */
+    let ctx = canvs.getContext("2d");
+    let HeroTank = new UserTank(20, 20, 50, 50, 10, "./pics/tank2.png")
+
+    function init() {
+      canvs.width = 800
+      canvs.height = 800
+      canvs.style.border = "1px solid "
+    }
+
+    function frame() {
+      ctx.clearRect(0,0,canvs.width, canvs.height)
+      HeroTank.blit()
+      window.requestAnimationFrame(frame)
+    }
+
+    function paintting() {
+
+    }
+
+    function main() {
+      init()
+      document.body.addEventListener("keydown", (e) => {
+        switch (e.key) {
+          case "ArrowUp":
+            HeroTank.img = HeroTank.imgCopy.cloneNode(true)
+            HeroTank.y -= HeroTank.s
+            break;
+          case "ArrowDown":
+            HeroTank.img = HeroTank.imgCopy.cloneNode(true)
+            HeroTank.img.style.transform = "rotateZ(180deg)"
+            HeroTank.y += HeroTank.s
+            break;
+          case "ArrowLeft":
+            HeroTank.img = HeroTank.imgCopy.cloneNode(true)
+            HeroTank.img.style.transform = "rotateZ(-90deg)"
+            HeroTank.x -= HeroTank.s
+            break;
+          case "ArrowRight":
+            HeroTank.img = HeroTank.imgCopy.cloneNode(true)
+            HeroTank.img.style.transform = "rotateZ(90deg)"
+            HeroTank.x += HeroTank.s
+            break;
+          default:
+            break;
+        }
+        console.log(e);
+        e.preventDefault();
+      })
+      window.requestAnimationFrame(frame)
+    }
+
+    main();
+  </script>
+</body>
+
+</html>
